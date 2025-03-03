@@ -1,5 +1,7 @@
 # ✈️ FlightAI: AI-Powered Virtual Airline Assistant
 
+![image](https://github.com/user-attachments/assets/7916ad7b-12a1-4227-aa30-9dd7b4104586)
+
 ## 🏗️ System Architecture
 FlightAI is a sophisticated virtual assistant for a premium airline, designed to provide customers with accurate and helpful information about flights, bookings, and travel services. The system integrates a conversational AI interface with a mock airline database to simulate real-world interactions between customers and an airline's digital assistant.
 

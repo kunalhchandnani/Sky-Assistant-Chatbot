@@ -1,15 +1,14 @@
 # ✈️ FlightAI: AI-Powered Virtual Airline Assistant
 
-![image](https://github.com/user-attachments/assets/7916ad7b-12a1-4227-aa30-9dd7b4104586)
-
 ## 🏗️ System Architecture
 FlightAI is a sophisticated virtual assistant for a premium airline, designed to provide customers with accurate and helpful information about flights, bookings, and travel services. The system integrates a conversational AI interface with a mock airline database to simulate real-world interactions between customers and an airline's digital assistant.
 
-### 🔧 Core Components
+## 🔧 Core Components
 - **Conversational AI Engine**: Utilizes the Ollama API with a Llama 3.2 model for natural language understanding and generation.
 - **Mock Airline Database**: A Python class simulating an airline's backend systems.
 - **Tool Functions**: A set of functions allowing AI to query the database.
 - **Gradio Web Interface**: A modern, responsive UI for customer interactions.
+- **Translation Agent**: A dedicated module that translates both user queries and AI responses into a target language, ensuring multilingual support.
 
 ## ✨ Key Features
 
@@ -33,15 +32,24 @@ FlightAI is a sophisticated virtual assistant for a premium airline, designed to
 - **Tool Integration**: Connects AI responses with database queries.
 - **Professional Tone**: Ensures a friendly, premium airline brand experience.
 
+### 5️⃣ Multilingual Translation Support 🌐
+- **Real-Time Translation**: FlightAI now includes a translation agent that processes both user inputs and AI responses, ensuring customers can communicate in their preferred language.
+- **Translation Functionality**: A dedicated translate_text function calls the AI model with a specialized system prompt to translate text accurately while preserving the original tone and style.
+- **Dual Chat Interface**: The Gradio UI has been extended with an additional panel for displaying translated conversations. Users select a target language (e.g., Spanish, French, German) from a dropdown, and the system automatically shows both the original and translated chat messages.
+- **Seamless Integration**: This multilingual capability is built into the response flow. When a user sends a message, the system generates an original reply and simultaneously translates both the query and response, providing a parallel conversation stream for international travelers.
+
 ## 🖥️ Technical Implementation
 
 ### ⚙️ AI Model Configuration
 The system uses a locally hosted Llama 3.2 model via Ollama:
+
 ```python
 MODEL = "llama3.2"
 client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')
 ```
+
 The AI assistant is guided by a system message defining its role:
+
 ```python
 system_message = """
 You are FlightAI, a professional and helpful virtual assistant for a premium airline.
@@ -53,7 +61,8 @@ Use a friendly, professional tone that represents the premium brand image of the
 ```
 
 ### 🗄️ Database Structure
-The `FlightDatabase` class simulates airline systems:
+The FlightDatabase class simulates airline systems:
+
 - **Flight Data**: Details about flights (origins, destinations, schedules, prices, available seats).
 - **Flight Status**: Real-time flight updates.
 - **Destinations**: City details including prices, airport codes, attractions.
@@ -62,8 +71,9 @@ The `FlightDatabase` class simulates airline systems:
 
 ### 🔧 Tool Functions
 AI accesses the database via specialized functions:
+
 ```python
- tools = [
+tools = [
     {
         "type": "function",
         "function": {
@@ -75,6 +85,7 @@ AI accesses the database via specialized functions:
     # Other tool definitions...
 ]
 ```
+
 #### 📜 Available Functions:
 - `get_ticket_price`: Retrieves ticket pricing.
 - `search_flights`: Finds flights matching criteria.
@@ -83,33 +94,39 @@ AI accesses the database via specialized functions:
 - `get_user_info`: Accesses user profiles.
 - `check_baggage_allowance`: Calculates baggage limits.
 
-## 🔄 Conversation Flow
-1️⃣ **User Input** → User submits a query via Gradio.
-2️⃣ **Message Processing** → The message is added to conversation history.
-3️⃣ **AI Response Generation** → The system queries the AI model.
-4️⃣ **Tool Execution** → AI calls tools if needed.
-5️⃣ **Final Response** → AI composes the response.
-6️⃣ **UI Update** → Response is displayed to the user.
+### 🔄 Conversation Flow
+1. **User Input** → User submits a query via Gradio.
+2. **Message Processing** → The message is added to conversation history.
+3. **AI Response Generation** → The system queries the AI model.
+4. **Tool Execution** → AI calls tools if needed.
+5. **Translation Processing** → The translation agent converts both the user's query and AI response into the selected language.
+6. **Final Response** → The system presents both the original and translated messages.
+7. **UI Update** → Responses are displayed on dual chat panels.
 
 Example:
-```plaintext
+
+```
 User: "How much is a ticket to London?"
 AI → System: Calls `get_ticket_price("london")`
 Database → System: Returns ticket price
-System → AI: AI integrates price into response
-AI → User: "A ticket to London (LHR) costs $799 for economy class. Business class starts at $1,997.50, first class at $3,196."
+System → AI: AI integrates price into response and translates the conversation
+AI → User: 
+  Original: "A ticket to London (LHR) costs $799 for economy class. Business class starts at $1,997.50, first class at $3,196."
+  Translated (e.g., Spanish): "Un billete a Londres (LHR) cuesta $799 en clase económica. La clase business comienza en $1,997.50 y la primera clase en $3,196."
 ```
 
-## 🎨 User Interface (UI)
+### 🎨 User Interface (UI)
 The Gradio interface features:
-- **💬 Chat Panel**: Main interaction window.
+
+- **💬 Chat Panel**: Main interaction window for the original conversation.
+- **🌐 Translated Chat Panel**: Displays the translated version of the conversation based on user-selected language.
 - **👤 User Profile Panel**: Personalized assistance options.
 - **✈️ Flight Search Panel**: Browse available flights.
 - **🔗 Quick Links**: Access common information pages.
-
-💠 *Custom dark theme with blue and teal accents for a premium feel.*
+- **💠 Custom dark theme** with blue and teal accents for a premium feel.
 
 ## 📁 Data Structures
+
 ### ✈️ Flight Data Format
 ```python
 {
@@ -138,6 +155,7 @@ The Gradio interface features:
 ```
 
 ## 🔍 Implementation Considerations
+
 ### ⚠️ Error Handling
 - API failures 🚫
 - Invalid/missing data ⚠️
@@ -155,14 +173,14 @@ The Gradio interface features:
 - Input validation ✅
 
 ## 🔮 Future Enhancements
-✅ **Real Database Integration**: Connect to actual airline reservation systems.
-✅ **Multi-language Support**: Expand accessibility.
-✅ **Booking Functionality**: Enable users to book flights.
-✅ **Payment Processing**: Integrate secure transactions.
-✅ **Web/Mobile App Integration**: Extend to airline's apps.
-✅ **Voice Interface**: Add speech recognition.
+- ✅ **Real Database Integration**: Connect to actual airline reservation systems.
+- ✅ **Multi-language Support**: Expand accessibility with further language integrations.
+- ✅ **Booking Functionality**: Enable users to book flights.
+- ✅ **Payment Processing**: Integrate secure transactions.
+- ✅ **Web/Mobile App Integration**: Extend to airline's apps.
+- ✅ **Voice Interface**: Add speech recognition.
 
 ## 🎯 Conclusion
-FlightAI is a cutting-edge AI assistant for premium airlines, combining NLP with domain-specific knowledge and a user-friendly interface. Its modular architecture allows easy expansion and real-world airline integration.
+FlightAI is a cutting-edge AI assistant for premium airlines, combining NLP with domain-specific knowledge and a user-friendly interface. Its modular architecture, now enhanced with real-time multilingual translation, allows easy expansion and real-world airline integration.
 
-✈️ **Enhancing airline customer service through AI!**
+✈️ Enhancing airline customer service through AI and bridging language barriers with multilingual support!
